@@ -42,6 +42,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(__dirname+'./../public'));
 
 /* Authentication Crap */
 passport.use(new TwitterStrategy({
@@ -69,18 +70,17 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-  console.log(user);
   done(null, user);
 });
 
 /*Signing in to Twitter*/
 app.get('/auth', passport.authenticate('twitter'));
-app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `http://${publicUrl}/#/`,failureRedirect: 'http://${publicUrl}/#/'}));
+app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#/`,failureRedirect: 'http://${publicUrl}/#/'}));
 
 /* My routes */
 //app.get('/current-user', userRequests.userLookUp);
 app.get('/test', function(req, res){
-  console.log(req.session.passport);
+  console.log(req.user);
   res.status(200).json(req.user);
 });
 
