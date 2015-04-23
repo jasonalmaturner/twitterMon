@@ -4,7 +4,8 @@ var os = require('os');
 module.exports = {
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/^react$/, 'react/addons'),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.IgnorePlugin(/vertx/)
     ],
 
     entry: [

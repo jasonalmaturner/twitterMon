@@ -10,7 +10,7 @@ new WebpackDevServer(webpack(config), {
     noInfo: true
 }).listen(4000, '0.0.0.0', function (err) {
         if (err) {
-            console.log(err)
+            console.log(err);
         }
-        console.log('Listening at http://' + os.hostname() + ':4000')
+        console.log('Listening at http://' + os.hostname() + ':4000');
     });

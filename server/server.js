@@ -75,14 +75,12 @@ passport.deserializeUser(function(user, done) {
 
 /*Signing in to Twitter*/
 app.get('/auth', passport.authenticate('twitter'));
-app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#/`,failureRedirect: 'http://${publicUrl}/#/'}));
+app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#/loading/dashboard`,failureRedirect: 'http://${publicUrl}/#/'}));
 
-/* My routes */
-//app.get('/current-user', userRequests.userLookUp);
-app.get('/test', function(req, res){
-  console.log(req.user);
-  res.status(200).json(req.user);
-});
+/* User Routes */
+app.get('/current-user', userRequests.userLookUp);
+
+/* Twitter Routes*/
 
 app.listen(port, function() {
   console.log(`server listening on ${port}`);
