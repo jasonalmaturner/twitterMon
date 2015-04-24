@@ -7,3 +7,4 @@ https:
 rethinkdb_data
 public/*
 !public/index.html
+dump.rdb

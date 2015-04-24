@@ -4,18 +4,38 @@ import {constObj} from './../constants';
 
 var twitterRequests = {
   isFollower(req, res){
-    getData(req.query.monname, req).then(function(response){
-      console.log(1111111, response)
-      if(response.following){
-        res.status(200).json(response);
+    isFriend(req.user.id, req.query.monname, req).then(function(response){
+      if(response){
+        getData(req.query.monname, req).then(function(resp){
+          res.status(200).json(resp);
+        }, function(erro){
+          res.status(500).json(erro);
+        });
       } else {
         res.status(400).json({message: "Not your friend"});
       }
-    }, function(error){
-      res.status(500).json(error);
+    }, function(err){
+      res.status(500).json(err);
     });
   }
 };
+
+function isFriend(userId, monName, req){
+  return new Promise(function(resolve, reject){
+    new Twit({
+      consumer_key: constObj.twitterKey,
+      consumer_secret: constObj.twitterSecret,
+      access_token: req.user.twitToken,
+      access_token_secret: req.user.twitTokenSecret
+    }).get('friendships/show', {source_id: userId, target_screen_name: monName}, function(err, data, response){
+      if(err){
+        reject(err);
+      } else {
+        resolve(data.relationship.source.followed_by);
+      }
+    });
+  });
+}
 
 function getData(monName, req){
   return new Promise(function(resolve, reject){
