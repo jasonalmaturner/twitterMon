@@ -24,9 +24,8 @@ AppDispatcher.register(function(payload){
   var action = payload.action;
   switch(action.actionType){
     case "ASSIGN_USER":
-      assignUser(payload.data);
+      assignUser(action.data);
       userStore.emit(CHANGE_EVENT);
-      console.log(_store);
       break;
   }
 });
