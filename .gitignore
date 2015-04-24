@@ -5,3 +5,5 @@ public/bundle.js
 .jshintrc
 https:/
 rethinkdb_data
+public/*
+!public/index.html

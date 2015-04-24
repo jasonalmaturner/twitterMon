@@ -18,6 +18,7 @@ import { userHub } from './storage/userHub';
 
 /* Request Handlers */
 import { userRequests } from './requestHandlers/userRequests';
+import{ twitterRequests } from './requestHandlers/twitterRequests';
 
 /* My consts */
 
@@ -81,8 +82,7 @@ app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#
 app.get('/current-user', userRequests.userLookUp);
 
 /* Twitter Routes*/
-// app.get('/', twitterRequests.)
-
+app.get('/api/mondata', twitterRequests.isFollower);
 
 app.listen(port, function() {
   console.log(`server listening on ${port}`);
