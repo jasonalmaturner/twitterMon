@@ -80,7 +80,7 @@ app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#
 
 /* User Routes */
 app.get('/api/check-for-user', userRequests.userLookUp);
-app.get('/api/current-user', userRequests.getCurrentUser);
+app.get('/api/add-user', userRequests.postUser);
 
 /* Twitter Routes*/
 app.get('/api/mondata', twitterRequests.isFollower);

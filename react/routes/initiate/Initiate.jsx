@@ -46,40 +46,50 @@ class Initiate extends React.Component {
           break;
         case "Not your friend":
           this.setState({
-            status: "Only people you follow you can be in your team."
+            status: "Only people who follow you can be in your team."
           });
       }
     });
+  }
+
+  saveUser(){
+    console.log('do it!');
   }
 
   render(){
     if(!userStore.getCurrentUser()){
       this.context.router.transitionTo('welcome');
     }
+    var advance;
+    if(this.state.team.length < 5){
+      advance = <input style={{fontSize: '3rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
+    } else {
+      advance = <div>You can always change your team later... but for now <button onClick={this.saveUser.bind(this)}>Register Team</button></div>;
+    }
     var followerTeam = this.state.team.map((item, index)=>{
-      return <div key={index}>
-              <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
-              <p>i'll put an animation here later</p>
-              <table>
-                <tr>
-                  <td>
-                    {item.screen_name}
-                  </td>
-                  <td>
-                    {item.name}
-                  </td>
-                </tr>
-              </table>
-            </div>;
+      return (
+        <div key={index} className="followerTable">
+          <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
+          <p>i'll put an animation here later</p>
+          <table>
+            <tr>
+              <td>
+                {item.name}
+              </td>
+              <td>
+                @{item.screen_name}
+              </td>
+            </tr>
+          </table>
+        </div>);
     });
 
     return (
       <div>
         Initiation
         <p>{this.state.status}</p>
-        <input style={{fontSize: '3rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>
+        {advance}
         {followerTeam}
-
       </div>
     );
   }
@@ -95,30 +105,21 @@ function getStatus(type){
   switch (type){
     case "magicwalrus":
       return "Wizard Walrus";
-      break;
     case "strengthwalrus":
       return "something something";
-      break;
     case "stealthwalrus":
       return "something something";
-      break;
     case "magicrobot":
       return "something something";
-      break;
     case "stealthrobot":
       return "something something";
-      break;
     case "strengthrobot":
       return "something something";
-      break;
     case "magichamburger":
       return "something something";
-      break;
     case "stealthhamburger":
       return "something something";
-      break;
     case "strengthhamburger":
       return "something something";
-      break;
   }
 }
