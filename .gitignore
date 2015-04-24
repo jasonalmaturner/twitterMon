@@ -4,3 +4,4 @@ node_modules/
 public/bundle.js
 .jshintrc
 https:/
+rethinkdb_data
