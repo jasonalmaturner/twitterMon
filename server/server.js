@@ -79,7 +79,8 @@ app.get('/auth', passport.authenticate('twitter'));
 app.get('/auth/callback', passport.authenticate('twitter', {successRedirect: `/#/loading/dashboard`,failureRedirect: 'http://${publicUrl}/#/'}));
 
 /* User Routes */
-app.get('/current-user', userRequests.userLookUp);
+app.get('/api/check-for-user', userRequests.userLookUp);
+app.get('/api/current-user', userRequests.getCurrentUser);
 
 /* Twitter Routes*/
 app.get('/api/mondata', twitterRequests.isFollower);

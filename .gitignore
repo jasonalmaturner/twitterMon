@@ -3,7 +3,7 @@ node_modules/
 .DS_Store
 public/bundle.js
 .jshintrc
-https:/
+https:
 rethinkdb_data
 public/*
 !public/index.html

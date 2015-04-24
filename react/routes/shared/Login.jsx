@@ -1,7 +1,4 @@
-import React from 'react';
-
-import { userActions } from './../../flux/actions/userActions';
-import { userStore } from './../../flux/stores/userStore';
+import { React, userActions, userStore, colorObj, stylesObj } from './../exportHub';
 
 class Login extends React.Component {
   constructor (props){
@@ -14,14 +11,23 @@ class Login extends React.Component {
   }
   _onChange(){
     this.setState({
-      user
+      user: userStore.getCurrentUser()
     });
   }
 
   render(){
+    var user;
+    if(this.state.user){
+      user = <div style={{display: 'flex', justifyContent: 'space-around'}}>
+                <span style={stylesObj.headerText}>{this.state.user.name}</span>
+                <span style={stylesObj.headerText}>@{this.state.user.screen_name}</span>
+              </div>;
+    } else {
+      user = <a href="/auth"><button style={stylesObj.utilButton}>Login</button></a>;
+    }
     return (
       <div>
-        <a href="http://localhost:4001/auth"><i className="fa fa-twitter-square"></i></a>
+        {user}
       </div>
     );
   }
