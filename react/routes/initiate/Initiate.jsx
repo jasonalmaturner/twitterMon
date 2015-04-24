@@ -1,10 +1,10 @@
-import { React, stylesObj, colorObj, axios, Router } from './../exportHub';
+import { React, stylesObj, colorObj, axios, Router, userStore } from './../exportHub';
 
 class Initiate extends React.Component {
   constructor(){
     this.state = {
       team: [],
-      status: 'Search for a follower'
+      status: "Search for a follower"
     };
   }
 
@@ -14,17 +14,28 @@ class Initiate extends React.Component {
     });
   }
 
+  removeFollower(index){
+    var newList = this.state.team;
+    newList.splice(index, 1);
+    this.setState({
+      team: newList,
+      status: "Poof they're gone!"
+    });
+  }
+
   handleKeyDown(e){
-    if(e.keycode === 13){
-      this.findFollower(this.refs.getDOMNode().value);
+    if(e.keyCode === 13){
+      console.log("here we go");
+      this.findFollower(this.refs.screen_name.getDOMNode().value);
     }
   }
 
   findFollower(name){
     axios.get(`/api/mondata?monname=${name}`).then((data)=>{
+      console.log(data);
       this.setState({
-        team: this.state.team.concat([data.data.follower]),
-        status: getStatus(data.data.follower.subtype + data.data.follower.type)
+        team: this.state.team.concat([data.data]),
+        status: getStatus(data.data.subtype + data.data.type)
       });
     }, (err)=>{
       switch (err.message){
@@ -42,9 +53,12 @@ class Initiate extends React.Component {
   }
 
   render(){
-    var followerTeam = this.state.team.map(function(item, index){
-      return <div id={index}>
-              <button onClick={this.removeFollower.bind(this)} style={stylesObj.utilButton}>Actually No</button>
+    if(!userStore.getCurrentUser()){
+      this.context.router.transitionTo('welcome');
+    }
+    var followerTeam = this.state.team.map((item, index)=>{
+      return <div key={index}>
+              <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
               <p>i'll put an animation here later</p>
               <table>
                 <tr>
@@ -63,13 +77,17 @@ class Initiate extends React.Component {
       <div>
         Initiation
         <p>{this.state.status}</p>
-        <input ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown}/>
+        <input style={{fontSize: '3rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>
         {followerTeam}
 
       </div>
     );
   }
 }
+
+Initiate.contextTypes = {
+  router: React.PropTypes.func
+};
 
 export { Initiate };
 
