@@ -32,11 +32,17 @@ class Initiate extends React.Component {
 
   findFollower(name){
     axios.get(`/api/mondata?monname=${name}`).then((data)=>{
-      console.log(data);
-      this.setState({
-        team: this.state.team.concat([data.data]),
-        status: getStatus(data.data.subtype + data.data.type)
-      });
+      if(!checkExisting(data.data, this.state.team)){
+        this.setState({
+          team: this.state.team.concat([data.data]),
+          status: getStatus(data.data.subType + data.data.type)
+        });
+      } else {
+        this.setState({
+          status: "That one's already in your team."
+        });
+      }
+
     }, (err)=>{
       switch (err.message){
         case "User not found.":
@@ -62,7 +68,7 @@ class Initiate extends React.Component {
     }
     var advance;
     if(this.state.team.length < 5){
-      advance = <input style={{fontSize: '3rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
+      advance = <input style={{fontSize: '2rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
     } else {
       advance = <div>You can always change your team later... but for now <button onClick={this.saveUser.bind(this)}>Register Team</button></div>;
     }
@@ -72,12 +78,28 @@ class Initiate extends React.Component {
           <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
           <p>i'll put an animation here later</p>
           <table>
-            <tr>
+            <tr style={{fontSize: '1.5em'}}>
               <td>
                 {item.name}
               </td>
               <td>
                 @{item.screen_name}
+              </td>
+            </tr>
+            <tr style={{fontSize: '2em'}}>
+              <td style={{color: colorObj[item.subType]}}>
+                {item.subType}
+              </td>
+              <td style={{color: colorObj.turq.plain}}>
+                {item.type}
+              </td>
+            </tr>
+            <tr style={{fontSize: '2em'}}>
+              <td style={{color: colorObj[item.subType]}}>
+                {item.stats.sub.toFixed(3)}
+              </td>
+              <td style={{color: colorObj.turq.plain}}>
+                {item.stats.main.toFixed(3)}
               </td>
             </tr>
           </table>
@@ -87,7 +109,7 @@ class Initiate extends React.Component {
     return (
       <div>
         Initiation
-        <p>{this.state.status}</p>
+        <p style={{fontSize: "2.2em"}}>{this.state.status}</p>
         {advance}
         {followerTeam}
       </div>
@@ -102,24 +124,34 @@ Initiate.contextTypes = {
 export { Initiate };
 
 function getStatus(type){
+  console.log(type);
   switch (type){
     case "magicwalrus":
       return "Wizard Walrus";
-    case "strengthwalrus":
+    case "StrengthWalrus":
       return "something something";
-    case "stealthwalrus":
+    case "StealthWalrus":
       return "something something";
-    case "magicrobot":
+    case "MagicRobot":
       return "something something";
-    case "stealthrobot":
+    case "StealthRobot":
       return "something something";
-    case "strengthrobot":
+    case "StrengthRobot":
       return "something something";
-    case "magichamburger":
+    case "MagicHamburger":
       return "something something";
-    case "stealthhamburger":
+    case "StealthHamburger":
       return "something something";
-    case "strengthhamburger":
+    case "StrengthHamburger":
       return "something something";
   }
+}
+
+function checkExisting(obj, arr){
+  for(var i = 0; i< arr.length; i++){
+    if(obj.screen_name === arr[i].screen_name){
+      return true;
+    }
+  }
+  return false;
 }
