@@ -1,10 +1,10 @@
-import { React, stylesObj, colorObj, axios, Router } from './../exportHub';
+import { React, stylesObj, colorObj, axios, Router, userStore } from './../exportHub';
 
 class Initiate extends React.Component {
   constructor(){
     this.state = {
       team: [],
-      status: 'Search for a follower'
+      status: "Search for a follower"
     };
   }
 
@@ -14,18 +14,35 @@ class Initiate extends React.Component {
     });
   }
 
+  removeFollower(index){
+    var newList = this.state.team;
+    newList.splice(index, 1);
+    this.setState({
+      team: newList,
+      status: "Poof they're gone!"
+    });
+  }
+
   handleKeyDown(e){
-    if(e.keycode === 13){
-      this.findFollower(this.refs.getDOMNode().value);
+    if(e.keyCode === 13){
+      console.log("here we go");
+      this.findFollower(this.refs.screen_name.getDOMNode().value);
     }
   }
 
   findFollower(name){
     axios.get(`/api/mondata?monname=${name}`).then((data)=>{
-      this.setState({
-        team: this.state.team.concat([data.data.follower]),
-        status: getStatus(data.data.follower.subtype + data.data.follower.type)
-      });
+      if(!checkExisting(data.data, this.state.team)){
+        this.setState({
+          team: this.state.team.concat([data.data]),
+          status: getStatus(data.data.subType + data.data.type)
+        });
+      } else {
+        this.setState({
+          status: "That one's already in your team."
+        });
+      }
+
     }, (err)=>{
       switch (err.message){
         case "User not found.":
@@ -35,72 +52,106 @@ class Initiate extends React.Component {
           break;
         case "Not your friend":
           this.setState({
-            status: "Only people you follow you can be in your team."
+            status: "Only people who follow you can be in your team."
           });
       }
     });
   }
 
+  saveUser(){
+    console.log('do it!');
+  }
+
   render(){
-    var followerTeam = this.state.team.map(function(item, index){
-      return <div id={index}>
-              <button onClick={this.removeFollower.bind(this)} style={stylesObj.utilButton}>Actually No</button>
-              <p>i'll put an animation here later</p>
-              <table>
-                <tr>
-                  <td>
-                    {item.screen_name}
-                  </td>
-                  <td>
-                    {item.name}
-                  </td>
-                </tr>
-              </table>
-            </div>;
+    if(!userStore.getCurrentUser()){
+      this.context.router.transitionTo('welcome');
+    }
+    var advance;
+    if(this.state.team.length < 5){
+      advance = <input style={{fontSize: '2rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
+    } else {
+      advance = <div>You can always change your team later... but for now <button onClick={this.saveUser.bind(this)}>Register Team</button></div>;
+    }
+    var followerTeam = this.state.team.map((item, index)=>{
+      return (
+        <div key={index} className="followerTable">
+          <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
+          <p>i'll put an animation here later</p>
+          <table>
+            <tr style={{fontSize: '1.5em'}}>
+              <td>
+                {item.name}
+              </td>
+              <td>
+                @{item.screen_name}
+              </td>
+            </tr>
+            <tr style={{fontSize: '2em'}}>
+              <td style={{color: colorObj[item.subType]}}>
+                {item.subType}
+              </td>
+              <td style={{color: colorObj.turq.plain}}>
+                {item.type}
+              </td>
+            </tr>
+            <tr style={{fontSize: '2em'}}>
+              <td style={{color: colorObj[item.subType]}}>
+                {item.stats.sub.toFixed(3)}
+              </td>
+              <td style={{color: colorObj.turq.plain}}>
+                {item.stats.main.toFixed(3)}
+              </td>
+            </tr>
+          </table>
+        </div>);
     });
 
     return (
       <div>
         Initiation
-        <p>{this.state.status}</p>
-        <input ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown}/>
+        <p style={{fontSize: "2.2em"}}>{this.state.status}</p>
+        {advance}
         {followerTeam}
-
       </div>
     );
   }
 }
 
+Initiate.contextTypes = {
+  router: React.PropTypes.func
+};
+
 export { Initiate };
 
 function getStatus(type){
+  console.log(type);
   switch (type){
     case "magicwalrus":
       return "Wizard Walrus";
-      break;
-    case "strengthwalrus":
+    case "StrengthWalrus":
       return "something something";
-      break;
-    case "stealthwalrus":
+    case "StealthWalrus":
       return "something something";
-      break;
-    case "magicrobot":
+    case "MagicRobot":
       return "something something";
-      break;
-    case "stealthrobot":
+    case "StealthRobot":
       return "something something";
-      break;
-    case "strengthrobot":
+    case "StrengthRobot":
       return "something something";
-      break;
-    case "magichamburger":
+    case "MagicHamburger":
       return "something something";
-      break;
-    case "stealthhamburger":
+    case "StealthHamburger":
       return "something something";
-      break;
-    case "strengthhamburger":
+    case "StrengthHamburger":
       return "something something";
-      break;
   }
+}
+
+function checkExisting(obj, arr){
+  for(var i = 0; i< arr.length; i++){
+    if(obj.screen_name === arr[i].screen_name){
+      return true;
+    }
+  }
+  return false;
 }

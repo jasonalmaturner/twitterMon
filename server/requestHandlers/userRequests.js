@@ -16,13 +16,13 @@ var userRequests = {
     }, function(err){
       res.status(500).json(err);
     });
-  }, getCurrentUser(req, res){
-    if(req.user){
-      res.status(200).json(slimUser(req.user, wants));
-    } else {
-      res.redirect('/auth');
-    }
-
+  },
+  postUser(req, res){
+    userHub.post(req.body).then(function(data){
+      res.status(200).json(data);
+    }, function(err){
+      res.status(500).json(err);
+    });
   }
 };
 

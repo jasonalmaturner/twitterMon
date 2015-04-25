@@ -13,14 +13,17 @@ var colorObj = {
     plain: '#91C12D',
     light: '#ABD651',
     dark: '#729D16'
-  }
+  },
+  Strength: '#F82424',
+  Stealth: '#F8F824',
+  Magic: '#332FAD'
 };
 
 var stylesObj = {
   utilButton:{
     background: colorObj.green.plain,
     color: 'white',
-    fontSize: '2em',
+    fontSize: '1.5em',
     border: 'none',
     cursor: 'pointer'
   },
