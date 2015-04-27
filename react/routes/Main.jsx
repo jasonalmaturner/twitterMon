@@ -1,8 +1,6 @@
 import React from 'react';
 import { RouteHandler, Link } from "react-router";
 
-import { Login } from './shared/Login';
-
 require('./mainStyles.css');
 
 class Main extends React.Component{
@@ -21,7 +19,6 @@ class Main extends React.Component{
   render(){
     return (
       <div>
-        <Login />
         <RouteHandler {...this.props}/>
       </div>
     );

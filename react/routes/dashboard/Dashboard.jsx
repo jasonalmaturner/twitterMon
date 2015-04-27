@@ -1,18 +1,22 @@
-import React from 'react';
+import { React, Router, stylesObj, colorObj, userActions, userStore } from './../exportHub';
 
-import { checkForUser } from './../shared/checkForUser';
-
-var Dashboard = checkForUser(class extends React.Component {
+class Dashboard extends React.Component {
   constructor(props){
 
+  }
+
+  componentWillMount(){
+    this.setState({
+      
+    })
   }
   render(){
     return (
       <div>
-        Dashboard
+
       </div>
     );
   }
-});
+}
 
 export { Dashboard };

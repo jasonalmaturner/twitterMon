@@ -7,9 +7,13 @@ var _store = {
     user: false
 };
 
-var assignUser = function(user){
+function assignUser(user){
   _store.user = user;
-};
+}
+
+function updateUser(update){
+  _store.user[update.updateField] = update.data;
+}
 
 var userStore = objectAssign({}, EventEmitter.prototype, {
   addChangeListener: function(cb){
@@ -25,6 +29,10 @@ AppDispatcher.register(function(payload){
   switch(action.actionType){
     case "ASSIGN_USER":
       assignUser(action.data);
+      userStore.emit(CHANGE_EVENT);
+      break;
+    case 'UPDATE_USER':
+      updateUser(action.data);
       userStore.emit(CHANGE_EVENT);
       break;
   }

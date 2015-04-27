@@ -7,11 +7,29 @@ class Loading extends React.Component {
       transition: ''
     };
   }
-
+  componentDidMount(){
+    userStore.addChangeListener(this._onChange.bind(this));
+  }
   componentWillMount(){
+    switch (this.props.params.transition){
+      case 'dashboard':
+        userActions.userCheck();
+        break;
+      case 'new-user':
+        userActions.submitNewUser(userStore.getCurrentUser());
+
+    }
+  }
+
+  _onChange(){
+    var user = userStore.getCurrentUser();
+    var routing = this.context.router;
     switch(this.props.params.transition){
       case 'dashboard':
-        userCheck.call(this);
+        user.twitterMon ? routing.transitionTo('dashboard', {id: user.id}) : routing.transitionTo('register');
+        break;
+      case 'new-user':
+        routing.transitionTo('dashboard', {id: user.id});
     }
   }
 
@@ -29,11 +47,3 @@ Loading.contextTypes = {
 };
 
 export { Loading };
-
-function userCheck(){
-  return axios.get('/api/check-for-user').then((data)=>{
-    var routing = this.context.router;
-    userActions.assignUser(data.data);
-    data.data.twitterMon ? routing.transitionTo('dashboard', {id: 'dunno yet'}) : routing.transitionTo('register');
-  });
-}

@@ -1,4 +1,4 @@
-import { React, stylesObj, colorObj, axios, Router, userStore } from './../exportHub';
+import { React, stylesObj, colorObj, axios, Router, userStore, userActions } from './../exportHub';
 
 class Initiate extends React.Component {
   constructor(){
@@ -25,13 +25,16 @@ class Initiate extends React.Component {
 
   handleKeyDown(e){
     if(e.keyCode === 13){
-      console.log("here we go");
       this.findFollower(this.refs.screen_name.getDOMNode().value);
     }
   }
 
   findFollower(name){
+    this.setState({
+      status: "Searching..."
+    });
     axios.get(`/api/mondata?monname=${name}`).then((data)=>{
+      this.refs.screen_name.getDOMNode().value = '';
       if(!checkExisting(data.data, this.state.team)){
         this.setState({
           team: this.state.team.concat([data.data]),
@@ -58,8 +61,14 @@ class Initiate extends React.Component {
     });
   }
 
-  saveUser(){
-    console.log('do it!');
+  submitUser(){
+    var newUser = userStore.getCurrentUser();
+    newUser.twitterMon = {
+      id: newUser.id,
+      team: this.state.team
+    };
+    userActions.assignUser(newUser);
+    this.context.router.transitionTo('/loading/new-user');
   }
 
   render(){
@@ -67,10 +76,10 @@ class Initiate extends React.Component {
       this.context.router.transitionTo('welcome');
     }
     var advance;
-    if(this.state.team.length < 5){
-      advance = <input style={{fontSize: '2rem'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
+    if(this.state.team.length < 4){
+      advance = <input style={{fontSize: '2rem', display: 'block'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
     } else {
-      advance = <div>You can always change your team later... but for now <button onClick={this.saveUser.bind(this)}>Register Team</button></div>;
+      advance = <div>You can always change your team later... but for now <button onClick={this.submitUser.bind(this)}>Register Team</button></div>;
     }
     var followerTeam = this.state.team.map((item, index)=>{
       return (
@@ -108,7 +117,6 @@ class Initiate extends React.Component {
 
     return (
       <div>
-        Initiation
         <p style={{fontSize: "2.2em"}}>{this.state.status}</p>
         {advance}
         {followerTeam}
