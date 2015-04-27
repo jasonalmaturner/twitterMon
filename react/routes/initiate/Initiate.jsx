@@ -134,7 +134,7 @@ export { Initiate };
 function getStatus(type){
   console.log(type);
   switch (type){
-    case "magicwalrus":
+    case "MagicWalrus":
       return "Wizard Walrus";
     case "StrengthWalrus":
       return "something something";
@@ -146,11 +146,11 @@ function getStatus(type){
       return "something something";
     case "StrengthRobot":
       return "something something";
-    case "MagicHamburger":
+    case "MagicSponge":
       return "something something";
-    case "StealthHamburger":
+    case "StealthSponge":
       return "something something";
-    case "StrengthHamburger":
+    case "StrengthSponge":
       return "something something";
   }
 }

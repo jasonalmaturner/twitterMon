@@ -7,6 +7,7 @@ var twitterRequests = {
     isFriend(req.user.id, req.query.monname, req).then(function(response){
       if(response){
         getData(req.query.monname, req).then(function(resp){
+          console.log(resp)
           res.status(200).json(resp);
         }, function(erro){
           res.status(500).json(erro);
@@ -75,7 +76,7 @@ function getTypes(id, main){
       case 1:
         return "Robot";
       case 2:
-        return "Hamburger";
+        return "Sponge";
     }
   } else {
     switch ((new Date(id).getTime() - 946783763754) % 3){
@@ -96,7 +97,7 @@ function getStats(obj, type){
   var days = ((new Date().getTime() - new Date(obj.created_at).getTime())/86400000);
   switch (type){
     case "Stealth":
-      statObj.sub = obj.friends_count / days;
+      statObj.sub = ((1 + obj.listed_count) / days) * 300;
       break;
     case "Strength":
       statObj.sub = (obj.statuses_count / days) * 2.5;

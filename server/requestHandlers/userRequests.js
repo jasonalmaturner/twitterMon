@@ -2,7 +2,7 @@ import { userHub } from './../storage/userHub';
 
 var userRequests = {
   userLookUp(req, res){
-    console.log(req.user);
+    // console.log(req.user);
     userHub.get(req.user.id).then(function(user){
       if(user.length === 1){
         req.user.twitterMon = user[0];
