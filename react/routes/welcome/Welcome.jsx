@@ -1,13 +1,16 @@
 import { React, axios, colorObj, stylesObj } from './../exportHub';
+import { Login } from './../sharedHub';
 
-var Welcome = React.createClass({
+class Welcome extends React.Component{
+
   render(){
     return (
       <div>
         Welcome
+        <Login />
       </div>
     );
   }
-});
+}
 
 export { Welcome };

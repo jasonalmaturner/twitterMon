@@ -11,6 +11,7 @@ var userRequests = {
         req.user.twitterMon = false;
         res.status(200).json(slimUser(req.user, wants));
       } else {
+        res.status(500).json({message: 'Duplicates'});
         console.log("Apparently there are duplicates?");
       }
     }, function(err){
@@ -18,8 +19,13 @@ var userRequests = {
     });
   },
   postUser(req, res){
-    userHub.post(req.body).then(function(data){
-      res.status(200).json(data);
+    userHub.post(req.body.twitterMon).then(function(data){
+      userHub.get(req.user.id).then(function(data){
+        console.log(data);
+        var user = slimUser(req.user, wants);
+        user.twitterMon = data[0].user;
+        res.status(200).json(user);
+      });
     }, function(err){
       res.status(500).json(err);
     });
