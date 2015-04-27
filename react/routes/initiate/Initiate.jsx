@@ -47,7 +47,8 @@ class Initiate extends React.Component {
       }
 
     }, (err)=>{
-      switch (err.message){
+      console.log(err)
+      switch (err.data.message){
         case "User not found.":
           this.setState({
             status: "That user doesn't seem to exist."
@@ -96,7 +97,7 @@ class Initiate extends React.Component {
               </td>
             </tr>
             <tr style={{fontSize: '2em'}}>
-              <td style={{color: colorObj[item.subType]}}>
+              <td style={{background: colorObj[item.subType], color: "white"}}>
                 {item.subType}
               </td>
               <td style={{color: colorObj.turq.plain}}>
@@ -104,7 +105,7 @@ class Initiate extends React.Component {
               </td>
             </tr>
             <tr style={{fontSize: '2em'}}>
-              <td style={{color: colorObj[item.subType]}}>
+              <td style={{background: colorObj[item.subType], color: "white"}}>
                 {item.stats.sub.toFixed(3)}
               </td>
               <td style={{color: colorObj.turq.plain}}>
