@@ -6,7 +6,7 @@ class Welcome extends React.Component{
   render(){
     return (
       <div>
-        Welcome
+        Welcome Poop Heads
         <Login />
       </div>
     );

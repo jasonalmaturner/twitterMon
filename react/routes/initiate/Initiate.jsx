@@ -13,6 +13,8 @@ class Initiate extends React.Component {
   componentWillMount(){
     if(!userStore.getCurrentUser()){
       this.context.router.transitionTo('welcome');
+    } else if(userStore.getCurrentUser().twitterMon) {
+      this.context.router.transitionTo('dashboard/' + userStore.getCurrentUser().id);
     }
   }
 
