@@ -1,11 +1,19 @@
 import { React, stylesObj, colorObj, axios, Router, userStore, userActions } from './../exportHub';
 
+import { TeamMember } from './TeamMember';
+
 class Initiate extends React.Component {
   constructor(){
     this.state = {
       team: [],
       status: "Search for a follower"
     };
+  }
+
+  componentWillMount(){
+    if(!userStore.getCurrentUser()){
+      this.context.router.transitionTo('welcome');
+    }
   }
 
   addToTeam(follower){
@@ -47,7 +55,6 @@ class Initiate extends React.Component {
       }
 
     }, (err)=>{
-      console.log(err)
       switch (err.data.message){
         case "User not found.":
           this.setState({
@@ -73,9 +80,7 @@ class Initiate extends React.Component {
   }
 
   render(){
-    if(!userStore.getCurrentUser()){
-      this.context.router.transitionTo('welcome');
-    }
+
     var advance;
     if(this.state.team.length < 4){
       advance = <input style={{fontSize: '2rem', display: 'block'}} ref="screen_name" placeholder="Screen Name" onKeyDown={this.handleKeyDown.bind(this)}/>;
@@ -83,37 +88,7 @@ class Initiate extends React.Component {
       advance = <div>You can always change your team later... but for now <button onClick={this.submitUser.bind(this)}>Register Team</button></div>;
     }
     var followerTeam = this.state.team.map((item, index)=>{
-      return (
-        <div key={index} className="followerTable">
-          <button onClick={this.removeFollower.bind(this, index)} style={stylesObj.utilButton}>Actually No</button>
-          <p>i'll put an animation here later</p>
-          <table>
-            <tr style={{fontSize: '1.5em'}}>
-              <td>
-                {item.name}
-              </td>
-              <td>
-                @{item.screen_name}
-              </td>
-            </tr>
-            <tr style={{fontSize: '2em'}}>
-              <td style={{background: colorObj[item.subType], color: "white"}}>
-                {item.subType}
-              </td>
-              <td style={{color: colorObj.turq.plain}}>
-                {item.type}
-              </td>
-            </tr>
-            <tr style={{fontSize: '2em'}}>
-              <td style={{background: colorObj[item.subType], color: "white"}}>
-                {item.stats.sub.toFixed(3)}
-              </td>
-              <td style={{color: colorObj.turq.plain}}>
-                {item.stats.main.toFixed(3)}
-              </td>
-            </tr>
-          </table>
-        </div>);
+      return (<TeamMember key={index} mon={item} remove={this.removeFollower.bind(this, index)}/>);
     });
 
     return (
@@ -133,10 +108,9 @@ Initiate.contextTypes = {
 export { Initiate };
 
 function getStatus(type){
-  console.log(type);
   switch (type){
     case "MagicWalrus":
-      return "Wizard Walrus";
+      return "You shall not pass!";
     case "StrengthWalrus":
       return "something something";
     case "StealthWalrus":
