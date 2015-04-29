@@ -21,7 +21,7 @@ var userActions = {
   },
   submitNewUser(user){
     axios.post('/api/add-user', user).then(function(data){
-      console.log(11111, data.data);
+      // console.log(11111, data.data);
       userActions.assignUser(data.data);
     });
   }

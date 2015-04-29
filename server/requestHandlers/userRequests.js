@@ -19,15 +19,23 @@ var userRequests = {
     });
   },
   postUser(req, res){
-    userHub.post(req.body.twitterMon).then(function(data){
-      userHub.get(req.user.id).then(function(data){
-        console.log(data);
-        var user = slimUser(req.user, wants);
-        user.twitterMon = data[0].user;
-        res.status(200).json(user);
-      });
-    }, function(err){
-      res.status(500).json(err);
+    userHub.get(req.body.id).then(function(resp){
+      if(!resp[0]){
+        userHub.post(req.body.twitterMon).then(function(data){
+          userHub.get(req.user.id).then(function(data){
+            console.log(data);
+            var user = slimUser(req.user, wants);
+            user.twitterMon = data[0].user;
+            res.status(200).json(user);
+          });
+        }, function(err){
+          res.status(500).json(err);
+        });
+      } else {
+        res.redirect('/#/dashboard/' + req.user.id);
+      }
+    }, function(erro){
+      res.status(500).json(erro);
     });
   }
 };

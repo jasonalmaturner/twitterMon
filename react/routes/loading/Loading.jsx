@@ -26,9 +26,11 @@ class Loading extends React.Component {
     var routing = this.context.router;
     switch(this.props.params.transition){
       case 'dashboard':
+        console.log(user.id);
         user.twitterMon ? routing.transitionTo('dashboard', {id: user.id}) : routing.transitionTo('register');
         break;
       case 'new-user':
+        console.log(user.id);
         routing.transitionTo('dashboard', {id: user.id});
     }
   }
