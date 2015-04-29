@@ -15,7 +15,7 @@ var colorObj = {
     dark: '#729D16'
   },
   Strength: '#F82424',
-  Stealth: '#F8F824',
+  Stealth: '#E8E824',
   Magic: '#332FAD'
 };
 
